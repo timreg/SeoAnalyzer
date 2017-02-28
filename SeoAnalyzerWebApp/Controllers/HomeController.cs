@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SeoAnalyzerLib.Models;
+using SeoAnalyzerWebApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,18 +15,46 @@ namespace SeoAnalyzerWebApp.Controllers
             return View();
         }
 
-        public ActionResult About()
+        [HttpPost]
+        public ActionResult GetReport(DtoReportOptions dtoOptions)
         {
-            ViewBag.Message = "Your application description page.";
+            SeoTextProcessor processor = new SeoTextProcessor();
+            Report report = new Report();
+            ReportOptions options = new ReportOptions()
+            {
+                SourceString = dtoOptions.SourceString
+                ,
+                OptCalcOccurAll = dtoOptions.OptCalcOccurAll
+                ,
+                OptCalcOccurExtLinks = dtoOptions.OptCalcOccurExtLinks
+                ,
+                OptCalcOccurMeta = dtoOptions.OptCalcOccurMeta
+                ,
+                OptFilterStopWords = dtoOptions.OptFilterStopWords
+            };
+            try
+            {
+                bool initResult = processor.Init(options);
+                if (!initResult)
+                {
+                    ViewBag.Message = "Error while initing input data! Check parameters and try again.";
+                    return PartialView("Error");
+                }
 
-            return View();
+                report = processor.Process();
+                if (report.Error)
+                {
+                    ViewBag.Message = report.ResultDescription;
+                    return PartialView("Error");
+                }
+                return PartialView("Report", report);
+            }
+            catch (Exception ex)
+            {
+                
+                return PartialView("Error",ex);
+            }
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
     }
 }

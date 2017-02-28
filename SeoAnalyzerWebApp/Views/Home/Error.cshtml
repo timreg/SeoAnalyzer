@@ -1,0 +1,23 @@
+﻿@model Exception
+
+<div class="row">
+    <div class="col-sm-8 col-md-offset-2">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong><br />
+            <hr />
+
+            @if (ViewBag.Message != null)
+            {
+                <strong>Message:</strong> @ViewBag.Message
+                <br />
+            }
+
+            @if (Model != null)
+            {
+                <strong>ExceptionMessage:</strong> @Model.Message
+            }
+
+        </div>
+    </div>
+</div>

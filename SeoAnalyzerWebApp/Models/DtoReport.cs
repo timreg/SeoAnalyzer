@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace SeoAnalyzerLib.Models
 {
-    public class Report
+    public class DtoReport
     {
         public Dictionary<string, int> NumberOccurWordsAll;
         public Dictionary<string, int> NumberOccurWordsMeta;
         public int NumberExtLinks;
-        public TimeSpan StatsTime;
+        public Dictionary<string, TimeSpan> StatsTime;
         public ReportOptions SourceData;
         public bool Error;
         public string ResultDescription;
 
-        public Report()
+        public DtoReport()
         {
             SourceData = new ReportOptions();
             Error = false;

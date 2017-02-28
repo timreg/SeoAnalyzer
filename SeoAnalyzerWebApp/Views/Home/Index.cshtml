@@ -1,31 +1,101 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model SeoAnalyzerWebApp.Models.DtoReportOptions
+@{
+    ViewBag.Title = "Home";
+    Html.EnableUnobtrusiveJavaScript(true);
 }
-
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <h2>SEO Analyzer</h2>
+            <hr>
+        </div>
     </div>
 </div>
+<div class="container" id="DivOptions">
+    <div class="row">
+        <div class="col-sm-8 col-md-offset-2">
+
+            <p>Put text or URL in text field below, select required options and press Analyze!</p>
+            @using (Ajax.BeginForm("GetReport", "Home", new AjaxOptions
+            {
+                HttpMethod = "POST"
+                    ,
+                InsertionMode = InsertionMode.Replace
+                    ,
+                UpdateTargetId = "ReportResult"
+                    ,
+                OnSuccess = "$('html, body').animate({scrollTop: $('#ReportResult').offset().top}, 1000);"
+                    ,
+                OnComplete = "$('#ReportResultStatus').val('error')"
+                    ,
+                OnFailure = "$('#ReportResultStatus').val('fail')"
+                , OnBegin = "$('#ReportResult').empty()"
+                    ,
+                LoadingElementId = "LoaderResult"
+                    ,
+                LoadingElementDuration = 1000
+
+            }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label for="SourceString">Text or url</label>
+                    @Html.TextAreaFor(m => m.SourceString
+                           , new { @class = "form-control", @style = "min-width:100%; overflow:hidden;", @rows = "1" }
+                          )
+                </div>
+
+                <div class="checkbox">
+                    @Html.CheckBoxFor(f => f.OptFilterStopWords, new { @checked = 1 })
+                    <label for="OptFilterStopWords">Filter stop words</label>
+                </div>
+                <div class="checkbox">
+                    @Html.CheckBoxFor(f => f.OptCalcOccurAll, new { @checked = 1 })
+                    <label for="OptCalcOccurAll">Calculate number of occurrences on the page of each word</label>
+                </div>
+                <div class="checkbox">
+                    @Html.CheckBoxFor(f => f.OptCalcOccurMeta, new { @checked = 1 })
+                    <label for="OptCalcOccurMeta">Calculate number of occurrences on the page of each word listed in meta tags</label>
+                </div>
+                <div class="checkbox">
+                    @Html.CheckBoxFor(f => f.OptCalcOccurExtLinks, new { @checked = 1 })
+                    <label for="OptCalcOccurExtLinks">Calculate number of external links in the text</label>
+                </div>
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-search"></i> Analyze</button>
+                    <button type="button" class="btn btn-warning"  onclick="$('#SourceString').val('');"><i class="glyphicon glyphicon-remove"></i> Clear</button>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class ="row" id="LoaderResult" style="display:none;">
+        <div class="col-sm-8 col-md-offset-2">
+            <div class="alert alert-success" role="alert">
+                Processing...
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div id="ReportResult">
+    </div>
+</div>
+<script language="javascript">
+    $("#SourceString").mouseenter(function () {
+        $(this).css('min-height', '500px');
+        $(this).css('overflow', 'auto');
+    });
+    $("#SourceString").mouseout(function () {
+        if ($(this).val() == "" || $(this).val().split(/\r*\n/).length <= 1) {
+            $(this).css('min-height', '0px');
+            $(this).css('overflow', 'hidden');
+        }
+    });
+</script>

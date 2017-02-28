@@ -9,8 +9,8 @@ namespace SeoAnalyzerLib.Interfaces
 {
     public interface IProcessor
     {
-        bool Init(Setup options);
-        Report DoProcess();
+        bool Init(ReportOptions options);
+        Report Process();
 
     }
 }
