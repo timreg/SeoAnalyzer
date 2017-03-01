@@ -9,6 +9,9 @@ using System.Text;
 
 namespace SeoAnalyzerTest
 {
+    /// <summary>
+    /// Some simple tests
+    /// </summary>
     [TestClass]
     public class TestProcessor
     {
@@ -65,35 +68,35 @@ namespace SeoAnalyzerTest
         [TestMethod]
         public void TestIsUrl()
         {
-            Assert.IsTrue(SeoTextProcessor.isUrl("http://example.com"));
-            Assert.IsTrue(SeoTextProcessor.isUrl("https://example.com"));
-            Assert.IsTrue(SeoTextProcessor.isUrl("http://example.com:80/pages/page"));
-            Assert.IsTrue(SeoTextProcessor.isUrl("https://example.com:80/pages/page?id=123"));
-            Assert.IsTrue(SeoTextProcessor.isUrl("https://example.com:80/pages/page?id=123&view=1"));
+            Assert.IsTrue((new SeoTextProcessor()).isUrl("http://example.com"));
+            Assert.IsTrue((new SeoTextProcessor()).isUrl("https://example.com"));
+            Assert.IsTrue((new SeoTextProcessor()).isUrl("http://example.com:80/pages/page"));
+            Assert.IsTrue((new SeoTextProcessor()).isUrl("https://example.com:80/pages/page?id=123"));
+            Assert.IsTrue((new SeoTextProcessor()).isUrl("https://example.com:80/pages/page?id=123&view=1"));
 
-            Assert.IsTrue(SeoTextProcessor.isUrl("example.com"));
-            Assert.IsTrue(SeoTextProcessor.isUrl("example.com/someurl"));
-            Assert.IsTrue(SeoTextProcessor.isUrl("example.com?id=123&a=b"));
+            Assert.IsTrue((new SeoTextProcessor()).isUrl("example.com"));
+            Assert.IsTrue((new SeoTextProcessor()).isUrl("example.com/someurl"));
+            Assert.IsTrue((new SeoTextProcessor()).isUrl("example.com?id=123&a=b"));
 
 
-            Assert.IsFalse(SeoTextProcessor.isUrl("text text"));
-            Assert.IsFalse(SeoTextProcessor.isUrl("text http://localhost"));
-            Assert.IsFalse(SeoTextProcessor.isUrl("http://localhost text"));
-            Assert.IsFalse(SeoTextProcessor.isUrl(""));
-            Assert.IsFalse(SeoTextProcessor.isUrl("    "));
+            Assert.IsFalse((new SeoTextProcessor()).isUrl("text text"));
+            Assert.IsFalse((new SeoTextProcessor()).isUrl("text http://localhost"));
+            Assert.IsFalse((new SeoTextProcessor()).isUrl("http://localhost text"));
+            Assert.IsFalse((new SeoTextProcessor()).isUrl(""));
+            Assert.IsFalse((new SeoTextProcessor()).isUrl("    "));
         }
 
         [TestMethod]
         public void TestIsHtml()
         {
-            Assert.IsTrue(SeoTextProcessor.isHtml("<!DOCTYPE html><html itemscope itemtype = \"http://schema.org/QAPage\" ><body>some text</body></html>"));
-            Assert.IsTrue(SeoTextProcessor.isHtml("<html></html>"));
-            Assert.IsTrue(SeoTextProcessor.isHtml("<html><body></body></html>"));
+            Assert.IsTrue((new SeoTextProcessor()).isHtml("<!DOCTYPE html><html itemscope itemtype = \"http://schema.org/QAPage\" ><body>some text</body></html>"));
+            Assert.IsTrue((new SeoTextProcessor()).isHtml("<html></html>"));
+            Assert.IsTrue((new SeoTextProcessor()).isHtml("<html><body></body></html>"));
 
-            Assert.IsFalse(SeoTextProcessor.isHtml("text text"));
-            Assert.IsFalse(SeoTextProcessor.isHtml("html text"));
-            Assert.IsFalse(SeoTextProcessor.isHtml(""));
-            Assert.IsFalse(SeoTextProcessor.isHtml("    "));
+            Assert.IsFalse((new SeoTextProcessor()).isHtml("text text"));
+            Assert.IsFalse((new SeoTextProcessor()).isHtml("html text"));
+            Assert.IsFalse((new SeoTextProcessor()).isHtml(""));
+            Assert.IsFalse((new SeoTextProcessor()).isHtml("    "));
         }
 
         [TestMethod]
@@ -101,7 +104,7 @@ namespace SeoAnalyzerTest
         public void TestGetUrlContentFails()
         {
             string retVal = string.Empty;
-            retVal = SeoTextProcessor.getUrlContent("sometext");
+            retVal = (new SeoTextProcessor()).getUrlContent("sometext");
         }
 
         [TestMethod]
@@ -109,15 +112,15 @@ namespace SeoAnalyzerTest
         public void TestGetUrlContentFails2()
         {
             string retVal = string.Empty;
-            retVal = SeoTextProcessor.getUrlContent("http://not-existing-domain.com/page");
+            retVal = (new SeoTextProcessor()).getUrlContent("http://not-existing-domain.com/page");
         }
 
         [TestMethod]
         public void TestGetUrlContentSuccess()
         {
             string retVal = string.Empty;
-            Assert.IsTrue(SeoTextProcessor.getUrlContent("http://example.com").Length > 0);
-            Assert.IsTrue(SeoTextProcessor.getUrlContent("https://example.com").Length > 0);
+            Assert.IsTrue((new SeoTextProcessor()).getUrlContent("http://example.com").Length > 0);
+            Assert.IsTrue((new SeoTextProcessor()).getUrlContent("https://example.com").Length > 0);
         }
 
         [TestMethod]
@@ -139,8 +142,10 @@ namespace SeoAnalyzerTest
         [TestMethod]
         public void TestFilterStopWords()
         {
-            List<string> stopWords = new List<string> {"a", "or","not","at","in","this" };
-            Assert.AreEqual("new text sample test",(new SeoTextProcessor()).filterStopWords(stopWords, "A new text sample in this test"));
+            List<string> stopWords = new List<string> { "a", "or", "not", "at", "in", "this", "an" };
+            Assert.AreEqual("new text sample test integer interest", (new SeoTextProcessor()).filterStopWords(stopWords, "A new text sample in this test integer interest"));
+            Assert.AreEqual("original internet", (new SeoTextProcessor()).filterStopWords(stopWords, "or original in an internet"));
+
         }
 
         [TestMethod]
@@ -165,12 +170,12 @@ namespace SeoAnalyzerTest
                 .Replace("\n", " ")
                 .Replace("\t", " ")
                 ;
-            
+
             HtmlDocument htmlDoc = new HtmlDocument();
             htmlDoc.OptionFixNestedTags = true;
             htmlDoc.LoadHtml(urlContent);
             return htmlDoc.DocumentNode.SelectSingleNode("//body");
 
         }
-}
+    }
 }

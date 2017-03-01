@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SeoAnalyzerLib.Models
 {
+    /// <summary>
+    /// Contains text analyzing result
+    /// </summary>
     public class Report
     {
         public Dictionary<string, int> NumberOccurWordsAll;

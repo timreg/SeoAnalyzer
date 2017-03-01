@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SeoAnalyzerWebApp.Models
 {
+    /// <summary>
+    /// Data transfer object for options form
+    /// </summary>
     public class DtoReportOptions
     {
         [Required(ErrorMessage ="Empty string is not allowed!")]
@@ -16,5 +19,7 @@ namespace SeoAnalyzerWebApp.Models
         public bool OptCalcOccurAll { get; set; }
         public bool OptCalcOccurMeta { get; set; }
         public bool OptCalcOccurExtLinks { get; set; }
+
+        
     }
 }
